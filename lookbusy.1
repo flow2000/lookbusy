@@ -1,0 +1,215 @@
+." $Id$
+.TH lookbusy
+.SH NAME
+lookbusy \- a synthetic load generator
+
+.SH SYNOPSIS
+\fBlookbusy\fR [OPTIONS]
+
+.SH DESCRIPTION
+
+lookbusy generates synthetic CPU, memory and disk access loads on a host.  CPU
+load is induced by simple arithmetic looping (with as little memory bandwidth
+consumption as feasible) alternating with periods of sleeping in an attempt to
+generate the degree of utilization selected.  Memory load is induced by
+allocating a buffer of a controllable size, then steadily stirring it to keep
+the pages active from the VM standpoint.  Disk load is induced through
+creation of one or more files, and copying blocks of it between two moving
+positions.
+
+.SH OPTIONS
+.TP
+\-h, \-\-help
+
+Display commandline help.
+
+.TP
+\-V, \-\-version
+
+Display the lookbusy version and copyright information.
+
+.TP
+\-v, \-\-verbose
+
+Produce verbose output; may be specified more than once for additional noise.
+
+.TP
+\-q, \-\-quiet
+
+Be quiet; produce error output only.
+
+.TP
+\-c \fIutil\fR[\-\fIhigh_util\fR], \-\-cpu\-util \fIutil\fR[\-\fIhigh_util\fR]
+
+Attempt to use between \fIutil\fR and \fIhigh_util\fR percent of time on each
+CPU.  For fixed usage mode (see \fB\-\-cpu\-mode\fR), only \fIutil\fR should
+be given.  For curved usage mode, a range should be given.  If specified,
+\fIhigh_util\fR should be greater than \fIutil\fR, and both values must be
+between 0 and 100 inclusive.
+
+Prior to starting, a short benchmark will be attempted to establish a
+spin/sleep ratio needed; this estimate assumes that all CPUs are of equal
+speed, and that at least one CPU is unutilized during the test.  The default
+is 50%.
+
+.TP
+\-n \fIn\fR, \-\-ncpus \fIn\fR
+
+Specify explicitly that \fIn\fR CPUs are to be kept busy, instead of
+attempting to auto-detect how many physical CPUs are involved.
+
+.TP
+\-r \fImode\fR, \-\-cpu\-mode \fImode\fR
+
+Select a CPU utilization mode.  \fImode\fR must be one of \fBfixed\fR
+or \fBcurve\fR.  The default is \fBfixed\fR.
+
+In \fBfixed\fR mode, lookbusy will attempt to maintain a constant CPU usage at
+the level specified (see \fI\-\-cpu\-util\fR).
+
+In \fBcurve\fR mode, CPU usage will vary between the range specified (again,
+see \fI\-\-cpu\-util\fR) according to a repeating curve function having a
+period specified by \fI\-\-cpu\-curve\-period\fR and a peak at the offset
+within that period specified by \fI\-\-cpu\-curve\-peak\fR.  The default curve
+period is 24 hours long, with a peak at local midnight (or midnight GMT, if
+\-\-utc is given).  As of version 1.0, this curve is simply a cosine function,
+though this may change in future releases.
+
+.TP
+\-P \fIinterval\fR[\fIunit\fR], \-\-cpu\-curve\-period \fIinterval\fR[\fIunit\fR]
+
+When using the \fBcurve\fR CPU usage mode, this option specifies the
+repetition period (frequency).  The utilization curve will return to its peak
+once per interval.  The interval is be specified as an integer, optionally
+followed by one of \fBd\fR (days), \fBh\fR (hours), \fBm\fR (minutes) or
+\fBs\fR (seconds).  For example, \fB12h\fR would specify a 12-hour utilization
+cycle.  If no units are specified, the value is interpreted as a number of
+seconds.
+
+.TP
+\-p \fIoffset\fR[\fIunit\fR], \-\-cpu\-curve\-peak \fIinterval\fR[\fIunit\fR]
+
+When using the \fBcurve\fR CPU mode, this option specifies the offset of the
+peak within the usage cycle.  As with \fB\-\-cpu\-curve\-period\fR above,
+\fIoffset\fR is given as an integer, optionally followed by \fBd\fR, \fBh\fR,
+\fBm\fR or \fBs\fR.  The default is chosen so as to place the peak at midnight
+local time (or UTC, if \-\-utc is given).
+
+.TP
+\-u, \-\-utc
+
+When computing time-relative utilization curves, make these computations for
+the UTC/GMT timezone.  If not specified, the host timezone is used.
+
+.TP
+\-m \fIutil\fR, \-\-mem-util \fIutil\fR
+
+Keep \fIutil\fR mebibytes (1024^2 bytes) of memory utilized.  This memory
+will be allocated, then continually stirred to ensure it is actually
+allocated in the VM system and impose pressure to keep it resident.  The
+default is 0 (disabled).
+
+.TP
+\-M \fIinterval\fR, \-\-mem\-sleep \fIinterval\fIR
+
+Sleep \fIinterval\fR milliseconds after each memory stir iteration.  The
+iteration reads and writes \fBPAGE_SIZE\fR bytes each from independently
+cycling positions in the working buffer.  The default is 1ms, which will
+produce very little visible load on modern hardware, but will cover a 1GB
+utilization buffer in roughly 4 minutes.
+
+.TP
+\-d \fIsize\fR[\fIunit\fR], \-\-disk\-util \fIsize\fR[\fIunit\fR]
+
+Generate disk activity by creating and updating a buffer of the given size.
+The integer value \fIsize\fR may optionally be followed by one of \fBb\fR
+(bytes), \fBkb\fR (kilobytes), \fBmb\fR (megabytes), \fBgb\fR (gigabytes) or
+\fBtb\fR (terabytes).  The default is 0 (disk churn disabled).
+
+.TP
+\-D \fIinterval\fR, \-\-disk\-sleep \fIinterval\fR
+
+Sleep \fIinterval\fR milliseconds after each iteration of the disk churn loop.
+Each iteration will read and write a block of data (see \fB\-b\fR) from two
+independently cycling positions in a scratch file.  See also \fB\-f\fR.  The
+default is 100ms.
+
+.TP
+\-b \fIblocksize\fR[\fIunit\fR], \-\-disk\-block\-size \fIblocksize\fR[\fIunit\fR]
+
+Specifies the particular size of blocks copied within the file when generating
+disk utilization.  The value given may be followed by one of \fBb\fR (bytes),
+\fBkb\fR (kilobytes), \fBmb\fR (megabytes), or \fBgb\fR (gigabytes); if no unit
+is given, bytes are assumed.  The default block size is 32768 bytes, or 32K.
+
+.TP
+\-f \fIpath\fR, \-\-disk\-path \fIpath\fR
+
+Use a file at \fIpath\fR as a file on which to generate disk activity.  If
+\fIpath\fR does not exist, but its dirname (see \fBdirname(1)\fR) does, the
+file will be used as specified.  If \fIpath\fR exists and is a directory,
+a secure temporary filename will be created within it and used.
+
+.SH CPU UTILIZATION
+
+If CPU utilization is enabled, a spinner process will be forked for each
+physical CPU detected on the system (or a fixed number of spinners, if the
+\fI-n\fR option is given.)  All spinners will monitor \fB/proc/stat\fR's
+cumulative CPU utilization counters, attempting to keep total system CPU load
+at the desired level.
+
+If other processes use a proportion of CPU time \fBless\fR than the chosen
+amount, lookbusy will use the remainder.  If other processes use \fBmore\fR
+than the chosen amount, lookbusy will reduce its own usage to a minimum
+until the load drops below the chosen level.
+
+The self-adjustment technique can take a relatively long time, by
+computational standards, to settle -- about 500ms on a 1GHz PowerPC CPU.
+Because of this latency, lookbusy should not be expected to defer to
+latency-sensitive applications quickly enough to avoid competing with them for
+CPU during periods of escalating consumption.
+
+.SH EXAMPLES
+.TP
+\fBlookbusy \-c 10\fR
+
+Attempt to use 10% of all available CPUs.
+
+.TP
+\fBlookbusy \-c 75 \-n 2\fR
+
+Attempt to keep up to two CPUs 75% utilized (if there is only one CPU, the two
+spinners will divide the load, though not necessarily evenly).
+
+.TP
+\fBlookbusy \-\-cpu\-mode curve \-\-cpu-curve-peak 14h \-c 20\-80\fR
+
+Maintain a CPU load of between 20% and 80%, on a curve repeating every 24
+hours (the default), with its peak at 2PM local time.
+
+.TP
+\fBlookbusy \-c 20\-30 \-\-cpu\-mode curve \-\-cpu\-curve\-period 60m \-\-cpu\-curve\-peak 30m\fR
+
+Maintain a CPU load on a utilization curve between 20% and 30%, reaching a
+peak every hour on the half hour.
+
+.TP
+\fBlookbusy \-c 0 -m 512mb \-M 100\fR
+
+Keep 512MB of memory occupied, with a memory stir iteration every ~100 usec;
+don't use any other CPU time.
+
+.TP
+\fBlookbusy \-c 0 -d 2gb \-D 10 \-f /var/tmp/\fR
+
+Generate disk traffic via a 2GB temporary file in /var/tmp/, with a 10
+microsecond pause between each block operation.  Don't use CPU time.
+
+.SH COPYRIGHT
+Copyright (c) 2006, Devin Carraway <lookbusy@devin.com>
+.br
+This is free software.  You may redistribute copies of it under the terms of
+the GNU General Public License, version 2 or (at your option) any later
+version.  See <http://www.gnu.org/licenses/gpl.html> for the text of this
+license.  There is NO WARRANTY, to the extent permitted by law.
+

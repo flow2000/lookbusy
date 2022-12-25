@@ -1,0 +1,41 @@
+1.0: initial release.
+
+1.1: Various fixes:
+
+  + Some tidying and culling of verbose output
+
+  + CPU usage self-adjustment was usually wrong on multi-core machines, where
+    more than one CPU-jiffy may elapse per wallclock-jiffy.  Fixed to account
+    for the number of detected CPUs, or --ncpus if given.
+
+  + The CPU spinner's busy-wait loop was able to be optimized out on newer
+    GCC builds, and seemingly even by more recent x86_64 CPUs.  Adjusted the
+    busy-waits to be less optimizable at the cost of some memory bus traffic.
+
+  + If any child processes die, be more explicit about their exit status
+
+  + Get HZ (used to compute jiffies/sec) from sysconf()
+
+  + Get VM page size from sysconf()
+
+  + Fix compilation warnings on x86_64
+
+1.2: Two fixes:
+
+  + CPU adjustments were not being properly retained across iterations, so
+    a verbose-level check identifying when proper sleep calibration had been
+    reached was never actually displayed; this did not affect proper
+    function.
+
+  + Fix compilation under Debian Etch.
+
+1.3: One fix:
+
+  + Desired on-disk size was not being correctly passed to the disk stirrer
+    process, causing errors on little-endian systems with LFS support.
+
+1.4: One fix:
+
+  + Memory stirs greater than 4GB should work now, after fixes to non 64-bit
+    clean codepath.
+  + v1.3 did not properly identify itself as such with --version

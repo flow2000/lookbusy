@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.43"
+   sodipodi:docbase="/home/aqua/tinker/lookbusy"
+   sodipodi:docname="logo.svg"
+   inkscape:export-filename="/home/aqua/tinker/lookbusy/logo.png"
+   inkscape:export-xdpi="20.98"
+   inkscape:export-ydpi="20.98">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="616.35664"
+     inkscape:cy="550"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1218"
+     inkscape:window-height="554"
+     inkscape:window-x="141"
+     inkscape:window-y="170"
+     showborder="true" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="path1309"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 629.40903,533.64922 L 648,662.36218 L 549.47616,561.04414 C 453.58483,581.42295 340.65736,580.62571 248.67907,558.77482 C 123.70128,529.08437 91.40581,469.63492 176.59097,426.07514 C 261.77612,382.51537 432.34315,371.2591 557.32093,400.94955 C 682.29872,430.63999 714.59419,490.08945 629.40903,533.64922 z "
+       sodipodi:nodetypes="cccsssc" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4681"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Duncan;stroke:#000000;stroke-opacity:1"
+       transform="matrix(3.082245,0,0,2.17961,-451.4161,-535.865)"><flowRegion
+         id="flowRegion4683"><rect
+           id="rect4685"
+           width="145"
+           height="36"
+           x="216"
+           y="446.36218"
+           style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Duncan;stroke:#000000;stroke-opacity:1" /></flowRegion><flowPara
+         id="flowPara4687">lookbusy!</flowPara></flowRoot>  </g>
+</svg>

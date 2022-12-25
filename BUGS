@@ -1,0 +1,14 @@
+Known bugs in v1.0:
+
+CPU benchmarking phase at start is relatively innacurate, requiring
+significant compensation by the rolling-usage adjustment.  This calibration is
+done while other processes are starting, probably causing capacity
+underestimation.
+
+The rolling-usage adjustment takes longer to settle than it ought.
+
+CPU utilization code isn't portable, and may be vulnerable to changes in HZ,
+at least as viewed from userspace.
+
+The initial fill in the memory utilization code takes significant time.
+
