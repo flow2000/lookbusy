@@ -47,9 +47,41 @@ implementation is entirely portable to other UNIX systems; memory and disk
 usage should work as-is.  CPU utilization will almost certainly need porting
 work, as concerns use of the /proc filesystem and handling of SMP.
 
+## How to install
 
+download src by git:
 
-$Id$
+```shell
+git clone https://github.com/flow2000/lookbusy
+```
+
+or:
+
+```shell
+wget https://github.com/flow2000/lookbusy/archive/refs/heads/master.zip
+unzip master.zip
+```
+
+or:
+
+```shell
+wget https://ghproxy.com/https://github.com/flow2000/lookbusy/archive/refs/heads/master.zip
+unzip master.zip
+```
+
+compile and install:
+
+```shell
+cd lookbusy
+
+chmod a+x configure
+
+./configure
+
+make
+
+make install
+```
 
 ## General options
 
@@ -71,11 +103,27 @@ CPU usage options:
 
   -P, --cpu-curve-period=TIME Duration of utilization curve period, in seconds (append 'm', 'h', 'd' for other units)
 
+eg:
+
+```shell
+lookbusy -c 50
+
+lookbusy -c 50 -n 2
+
+lookbusy -c 50-80 -r curve
+```
+
 Memory usage options:
 
   -m, --mem-util=SIZE   Amount of memory to use (in bytes, followed by KB, MB, or GB for other units; see lookbusy(1))
 
   -M, --mem-sleep=TIME Time to sleep between iterations, in usec (default 1000)
+
+eg:
+
+```shell
+lookbusy -m 128MB -M 1000
+```
 
 Disk usage options:
 
@@ -86,4 +134,34 @@ Disk usage options:
   -D, --disk-sleep=TIME  Time to sleep between iterations, in msec (default 100)
 
   -f, --disk-path=PATH Path to a file/directory to use as a buffer (default /tmp); specify multiple times for additional paths
+
+eg:
+
+```shell
+lookbusy -d 1GB -b 1MB -D 10
+```
+
+## Run in the background
+
+if you need run lookbusy in the background, you can use `nohup`:
+
+```shell
+nohup lookbusy -c 50 > /dev/null 2>&1 &
+nohup lookbusy -c 50 -n 2 > /dev/null 2>&1 &
+nohup lookbusy -c 50-80 -r curve > /dev/null 2>&1 &
+```
+
+When you want to turn off `lookbusy`, if you use a background mount, such as nohup:
+
+```shell
+ps -ef | grep lookbusy | grep -v grep
+```
+
+kill this progress:
+
+```shell
+kill -9 <pid>
+```
+
+
 
